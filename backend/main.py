@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .core.config import settings
+from .core.logging import LoggingMiddleware, ErrorHandlingMiddleware
 from .api.routes import router as disputes_router
 from .api.metrics import router as metrics_router
 
@@ -24,6 +25,12 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    
+    # Error handling middleware
+    app.add_middleware(ErrorHandlingMiddleware)
+    
+    # Logging middleware
+    app.add_middleware(LoggingMiddleware)
     
     # Include routers
     app.include_router(disputes_router)
