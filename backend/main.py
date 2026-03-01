@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .core.config import settings
 from .api.routes import router as disputes_router
+from .api.metrics import router as metrics_router
 
 
 def create_app() -> FastAPI:
@@ -26,6 +27,7 @@ def create_app() -> FastAPI:
     
     # Include routers
     app.include_router(disputes_router)
+    app.include_router(metrics_router)
     
     # Health check endpoint
     @app.get("/health")
