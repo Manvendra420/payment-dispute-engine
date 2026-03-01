@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  # Backend API service
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - DATABASE_ECHO=False
+    volumes:
+      - ./backend:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - dispute-engine
+
+  # PostgreSQL database (commented out for now as requested)
+  # db:
+  #   image: postgres:15-alpine
+  #   environment:
+  #     - POSTGRES_USER=dispute_user
+  #     - POSTGRES_PASSWORD=secure_password
+  #     - POSTGRES_DB=dispute_engine
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - dispute-engine
+
+  # Optional: Redis for caching/async tasks
+  # redis:
+  #   image: redis:7-alpine
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - dispute-engine
+
+networks:
+  dispute-engine:
+    driver: bridge
+
+# volumes:
+#   postgres_data:
